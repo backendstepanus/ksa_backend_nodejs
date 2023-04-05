@@ -9,3 +9,12 @@
 // }
 
 // router.post('/hash_password', superadmin.hashPassword)
+
+// server.listen(port, hostname, () => {
+//     console.log("Server is running on " + port);
+// });
+// const server = http.createServer((req, res) => {
+//     res.statusCode = 200;
+//     res.setHeader('Content-Type', 'text/plain');
+//     res.end('Hello World');
+// });

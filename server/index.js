@@ -11,11 +11,7 @@ app.use(bodyparser.json());
 app.use(express.urlencoded({
     extended: true,
 }));
-// const server = http.createServer((req, res) => {
-//     res.statusCode = 200;
-//     res.setHeader('Content-Type', 'text/plain');
-//     res.end('Hello World');
-// });
+
 
 require('dotenv').config();
 const {
@@ -44,8 +40,5 @@ app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-// server.listen(port, hostname, () => {
-//     console.log("Server is running on " + port);
-// });
 
 app.use('/character_api', Character_apiRouter)
