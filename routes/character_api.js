@@ -13,6 +13,10 @@ router.get('/getDataByToken/:token', superadmin.getAdminUser)
 router.patch('/editDataByToken/:token', superadmin.editAdminUser)
 router.delete('/deleteDataByToken/:token', superadmin.eraseAdminUser)
 router.post('/create_store', superadmin.create_store)
+router.get('/get_store/:id', superadmin.getStore)
+router.get('/get_Allstore', superadmin.getAllStore)
+router.patch('/editStoreByID/:id', superadmin.editStore)
+router.delete('/deleteStoreByID/:id', superadmin.eraseStore)
 
 // Admin & User API
 module.exports = router;

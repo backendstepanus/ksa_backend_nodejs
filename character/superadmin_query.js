@@ -200,31 +200,115 @@ function create_store(req, res) {
     }
 }
 
-function get_user_admin(req, res) {
+function getStore(req, res) {
     const getParams = req.params
-    findByRole(getParams)
-        .then(foundUser => {
-            console.log(foundUser)
-            res.status(200).json(foundUser)
+    findStoreByID(getParams)
+        .then(foundStore => {
+            console.log(foundStore)
+            res.status(200).json(foundStore)
         })
 }
 
-function getAdminUser(req, res) {
-    const getParams = req.params
-    findByToken(getParams)
-        .then(foundUser => {
-            console.log(foundUser)
-            res.status(200).json(foundUser)
+function getAllStore(req, res) {
+    findAllStore()
+        .then(foundStore => {
+            console.log(foundStore)
+            res.status(200).json(foundStore)
         })
 }
 
-function editAdminUser(req, res) {
+function editStore(req, res) {
+    const getParams = req.params
+    let edit
+    findStoreByID(getParams)
+        .then(foundStore => {
+            edit = foundStore
+            console.log(foundStore)
+            if (edit) {
+                updateStore(req)
+                    .then(updated => {
+                        console.log(updated)
+                        res.status(200).json(updated)
+                    })
+            }
+        })
+        .catch(err => console.log(err))
+        .catch(err => res.status(500).json(err))
+}
+
+function eraseStore(req, res) {
+    const getParams = req.params
+    let deleted
+    findStoreByID(getParams)
+        .then(foundUser => {
+            deleted = foundUser
+            console.log(foundUser)
+            if (deleted) {
+                deleteStore(getParams)
+                    .then(() => {
+                        console.log("Data has been delete!")
+                        res.status(200).json("Data has been delete!")
+                    })
+                    .catch(err => console.log(err))
+                    .catch(err => res.status(500).json(err))
+            }
+        })
+        .catch(err => console.log(err))
+        .catch(err => res.status(500).json(err))
+}
+
+// CRUD Store End //
+
+// CRUD Role Start //
+function create_role(req, res) {
+    const userREG = req.body
+    let role
+    if (userREG.role) {
+        findRole(userREG)
+            .then(foundRole => {
+                role = foundRole
+                if (role == undefined) {
+                    console.log("Nama toko tidak ditemukan");
+                    createStore(userREG)
+                        .then(Role => {
+                            res.status(201).json({ Role })
+                            console.log(Role)
+                            console.log("Role has been success to Create!");
+                        })
+                        .catch((err) => console.error(err))
+                        .catch((err) => res.status(500).json({ error: err.message }))
+                } else {
+                    console.log(`Store name ${userREG.name} has been used, please use a different name to continue!`)
+                    res.status(500).json(`Store name ${userREG.name} has been used, please use a different name to continue!`)
+                }
+            })
+    }
+}
+
+function getRole(req, res) {
+    const getParams = req.params
+    findRoleByID(getParams)
+        .then(foundRole => {
+            console.log(foundRole)
+            res.status(200).json(foundRole)
+        })
+}
+
+function getAllRole(req, res) {
+    findAllRole()
+        .then(foundRole => {
+            console.log(foundRole)
+            res.status(200).json(foundRole)
+        })
+}
+
+function editRole(req, res) {
     const getParams = req.params
     let edit
     findByToken(getParams)
-        .then(foundUser => {
-            edit = foundUser
-            console.log(foundUser)
+        .then(foundStore => {
+            edit = foundStore
+            console.log(foundStore)
             if (edit) {
                 updateAdminUser(req)
                     .then(updated => {
@@ -237,10 +321,10 @@ function editAdminUser(req, res) {
         .catch(err => res.status(500).json(err))
 }
 
-function eraseAdminUser(req, res) {
+function eraseStore(req, res) {
     const getParams = req.params
     let deleted
-    findByToken(getParams)
+    findStoreByID(getParams)
         .then(foundUser => {
             deleted = foundUser
             console.log(foundUser)
@@ -258,7 +342,7 @@ function eraseAdminUser(req, res) {
         .catch(err => res.status(500).json(err))
 }
 
-// CRUD Store End //
+// CRUD Role End //
 
 // Superadmin Function End
 
@@ -321,6 +405,15 @@ const updateAdminUser = (req) => {
         .then((data) => data.rows[0])
 }
 
+const updateStore = (req) => {
+    const getparams = req.params
+    const getupdate = req.body
+    return database.raw(
+            "UPDATE store SET name = ?,address = ?,admin_store = ? WHERE token = ? RETURNING id,name,address,admin_store,token", [getupdate.name, getupdate.address, getupdate.admin_store, getparams.token]
+        )
+        .then((data) => data.rows[0])
+}
+
 const updateUserPassword = (user_reset, hashedPassword) => {
     return database.raw("UPDATE admin_user SET password = ? WHERE id = ? RETURNING id, username, password", [hashedPassword, user_reset.id])
         .then((data) => data.rows[0])
@@ -351,12 +444,20 @@ const updateStatus = (req, res) => {
 
 // Delete Function Start
 const deleteAdminUser = (getParams) => {
-        return database.raw(
-                "DELETE FROM admin_user WHERE token = ?", [getParams.token]
-            )
-            .then((data) => data.rows[0])
-    }
-    // Delete Function End
+    return database.raw(
+            "DELETE FROM admin_user WHERE token = ?", [getParams.token]
+        )
+        .then((data) => data.rows[0])
+}
+
+const deleteStore = (getParams) => {
+    return database.raw(
+            "DELETE FROM admin_user WHERE id = ?", [getParams.id]
+        )
+        .then((data) => data.rows[0])
+}
+
+// Delete Function End
 
 //Find Function Start
 function findUserID(getParams) {
@@ -394,8 +495,33 @@ function findByToken(getParams) {
         .then((data) => data.rows)
 }
 
+function findAllStore() {
+    return database.raw("SELECT * FROM store")
+        .then((data) => data.rows)
+}
+
 function findStore(userREG) {
     return database.raw("SELECT * FROM store WHERE name = ?", [userREG.name])
+        .then((data) => data.rows[0])
+}
+
+function findStoreByID(getParams) {
+    return database.raw("SELECT * FROM store WHERE id = ?", [getParams.id])
+        .then((data) => data.rows[0])
+}
+
+function findAllRole() {
+    return database.raw("SELECT * FROM role")
+        .then((data) => data.rows)
+}
+
+function findRole(userREG) {
+    return database.raw("SELECT * FROM role WHERE role_name = ?", [userREG.role])
+        .then((data) => data.rows[0])
+}
+
+function findRoleByID(getParams) {
+    return database.raw("SELECT * FROM role WHERE id = ?", [getParams.id])
         .then((data) => data.rows[0])
 }
 // Find Function End
@@ -427,5 +553,12 @@ module.exports = {
     getAdminUser,
     editAdminUser,
     eraseAdminUser,
-    create_store
+    create_store,
+    getStore,
+    getAllStore,
+    editStore,
+    eraseStore,
+    create_role,
+    getRole,
+    getAllRole
 }
