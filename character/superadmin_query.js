@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const key = ""
 const axios = require('axios')
 const otpGenerator = require('otp-generator')
-const environment = process.env.NODE_ENV || 'development';
+const environment = process.env.NODE_ENV || 'production';
 const configuration = require('../knex')[environment];
 const database = require('knex')(configuration);
 const bodyparser = require("body-parser");
@@ -355,6 +355,16 @@ const hashPassword = (password) => {
     )
 }
 
+const SU_hashPassword = (request) => {
+    const superadmin = request.body
+    return new Promise((resolve, reject) =>
+        bcrypt.hash(superadmin.password, 10, (err, hash) => {
+            err ? reject(err) : resolve(hash.toString('base64'))
+            console.log(hash)
+        })
+    )
+}
+
 // Hashing Function End
 
 // Create Function Start
@@ -546,6 +556,7 @@ module.exports = {
     get_superadmin,
     signin_superadmin,
     hashPassword,
+    SU_hashPassword,
     create_user,
     create_admin,
     get_user_admin,

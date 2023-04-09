@@ -3,6 +3,7 @@ const router = express.Router();
 const superadmin = require('../character/superadmin_query');
 
 // Superadmin API
+router.post('/hash_password', superadmin.SU_hashPassword)
 router.get('/get_superadmin/:id', superadmin.get_superadmin)
 router.post('/signin_superadmin', superadmin.signin_superadmin)
 router.post('/create_admin', superadmin.create_admin)
