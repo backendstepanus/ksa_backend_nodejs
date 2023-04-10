@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const superadmin = require('../character/superadmin_query');
+const role = require('../character/roles');
 
 // Superadmin API
 router.post('/hash_password', superadmin.SU_hashPassword)
@@ -18,6 +19,12 @@ router.get('/get_store/:id', superadmin.getStore)
 router.get('/get_Allstore', superadmin.getAllStore)
 router.patch('/editStoreByID/:id', superadmin.editStore)
 router.delete('/deleteStoreByID/:id', superadmin.eraseStore)
+
+//role api
+router.get('/getAllRole', role.getAllRole)
+router.post('/postRole', role.createRole)
+router.patch('/updateRole/:id', role.updateRole)
+router.delete('/deleteRole/:id', role.deleteRole);
 
 // Admin & User API
 module.exports = router;

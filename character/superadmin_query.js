@@ -520,20 +520,6 @@ function findStoreByID(getParams) {
         .then((data) => data.rows[0])
 }
 
-function findAllRole() {
-    return database.raw("SELECT * FROM role")
-        .then((data) => data.rows)
-}
-
-function findRole(userREG) {
-    return database.raw("SELECT * FROM role WHERE role_name = ?", [userREG.role])
-        .then((data) => data.rows[0])
-}
-
-function findRoleByID(getParams) {
-    return database.raw("SELECT * FROM role WHERE id = ?", [getParams.id])
-        .then((data) => data.rows[0])
-}
 // Find Function End
 
 // Check Function Start
@@ -550,6 +536,21 @@ const checkPassword = (userREG, foundUser) => {
         })
     )
 }
+
+// function findAllRole() {
+//     return database.raw("SELECT * FROM roles")
+//         .then((data) => data.rows)
+// }
+
+// function findRole(userREG) {
+//     return database.raw("SELECT * FROM role WHERE role_name = ?", [userREG.role])
+//         .then((data) => data.rows[0])
+// }
+
+// function findRoleByID(getParams) {
+//     return database.raw("SELECT * FROM role WHERE id = ?", [getParams.id])
+//         .then((data) => data.rows[0])
+// }
 
 // Check Function End
 module.exports = {
@@ -569,7 +570,4 @@ module.exports = {
     getAllStore,
     editStore,
     eraseStore,
-    create_role,
-    getRole,
-    getAllRole
 }
