@@ -1,7 +1,7 @@
 const http = require('http');
 const express = require('express');
 const app = express();
-const Character_apiRouter = require('../routes/character_api')
+const actionRouter = require('../routes/action')
 // const hostname = '127.0.0.1';
 const port = 3000;
 const bodyparser = require("body-parser");
@@ -41,4 +41,4 @@ app.listen(port, () => {
 });
 
 
-app.use('/character_api', Character_apiRouter)
+app.use('/actionApi', actionRouter)
