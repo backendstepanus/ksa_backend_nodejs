@@ -42,7 +42,7 @@ const createRole = async (request, response) => {
                     data: err
                 });
         } else {
-            models.findRole(body)
+            models.queryFindRole(body)
             .then(value => {
                 data = value
                 if(data === undefined)

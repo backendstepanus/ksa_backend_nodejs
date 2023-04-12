@@ -8,7 +8,7 @@ const queryAllRole = () => {
     .then((data) => data.rows)
 }
 
-const findRole = (body) => {
+const queryFindRole = (body) => {
     return database.raw("SELECT * FROM roles WHERE name_role = ?",[body.nama_role])
     .then((data) => data.rows[0])
 }
@@ -34,7 +34,7 @@ const queryDeleteRole = (param) => {
 
 module.exports = {
     queryAllRole,
-    findRole,
+    queryFindRole,
     queryInsertRole,
     queryUpdateRole,
     queryDeleteRole
